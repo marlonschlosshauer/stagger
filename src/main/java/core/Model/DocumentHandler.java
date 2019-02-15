@@ -1,73 +1,45 @@
 package core.Model;
 
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
 
 public class DocumentHandler extends DefaultListModel<Snapshot> {
 
+    // TODO:Re-write this entire shit but with DefaultListModel<Image> because I can't single out pages
 
-    private ArrayList<PDDocument> docs;
+    // close all documents
+    public void clean() {
+        try {
 
-    public boolean add(PDDocument doc) throws IOException {
+            for (int i = 0; i < this.getSize(); i++) {
+                get(i).getDoc().close();
+                this.removeElementAt(i);
+            }
 
-        for (PDPage page :
-                doc.getPages()) {
-            this.add(page);
+        } catch (IOException io) {
+            System.err.println("Could not close document : " + io.getMessage());
         }
-
-        return true;
-    }
-
-    // Wrapper for addElement of DefaultListModel
-    public boolean add(PDPage page) throws IOException {
-        this.addElement(new Snapshot(page));
-        System.out.println("Pages currently : " + this.getSize());
-        return true;
     }
 
     public PDDocument merge() throws IOException {
 
-        PDDocument doc = new PDDocument();
-        System.out.println("Pages currently : " + this.getSize());
-
+        PDDocument temp = new PDDocument();
+        PDFMergerUtility merger = new PDFMergerUtility();
 
         for (int i = 0; i < this.size(); i++) {
-            PDPage temp = this.getElementAt(i).getPage();
-            System.out.println(temp.getContents().toString());
-
-            if(temp == null) {
-                System.out.println("what the fuck are you doing java");
-            }
-            //doc.addPage(temp);
-            doc.importPage(temp);
-
-            System.out.println("Merged a page.");
+            merger.appendDocument(temp,this.getElementAt(i).getDoc());
         }
 
-        System.out.println("Pages now loaded : " + doc.getNumberOfPages());
-
-        System.out.println("Finished merging.");
-
-        return doc;
+        return temp;
     }
 
     public void load(String path) throws IOException {
 
-        PDDocument temp;
-
         try {
-            temp = PDDocument.load(new File(path));
-            for (PDPage page : temp.getPages()) {
-                this.add(page);
-                System.out.println("Added a page.");
-            }
-            System.out.println("Finished adding pages.");
-
-            temp.close();
+            this.addElement(new Snapshot(PDDocument.load(new File(path))));
 
         } catch (IOException e) {
             e.printStackTrace();
