@@ -8,45 +8,38 @@ import java.io.IOException;
 
 public class Snapshot {
 
-    private PDDocument doc;
-    private Image[] thumbnail;
-    private boolean[] selected;
+    private PDDocument parentDoc; // TODO: Could only be index
+    private Image thumbnail;
+    private int index;
+    private boolean selected = true;
 
-    public Snapshot(PDDocument doc) throws IOException {
+    public Snapshot(PDDocument parentDoc, int index) throws IOException {
 
-        this.doc = doc;
-        thumbnail = new Image[doc.getNumberOfPages()];
-        selected = new boolean[doc.getNumberOfPages()];
-
-        setSelected(0,doc.getNumberOfPages()-1, true);
+        this.parentDoc = parentDoc;
+        this.index = index;
 
         // Create thumbnails
-        PDFRenderer renderer = new PDFRenderer(doc);
-
-        for (int i = 0; i < doc.getNumberOfPages(); i++) {
-            this.thumbnail[i] = renderer.renderImage(0);
-        }
+        PDFRenderer renderer = new PDFRenderer(parentDoc);
+        thumbnail = renderer.renderImage(index);
     }
 
-    public Image[] getThumbnails() {
+    public Image getThumbnail() {
         return this.thumbnail;
     }
 
     public PDDocument getDoc() {
-        return this.doc;
+        return this.parentDoc;
     }
 
-    public boolean isSelected(int index) {
-        return this.selected[index];
+    public int getIndex() {
+        return index;
     }
 
-    public void setSelected(int index, boolean selected) {
-        this.selected[index] = selected;
+    public boolean isSelected() {
+        return this.selected;
     }
 
-    public void setSelected(int start, int end, boolean selected) {
-        for(int i = start ; i <= end ; i++) {
-            setSelected(i,selected);
-        }
+    public void setSelected(boolean isSelected) {
+        this.selected = isSelected;
     }
 }

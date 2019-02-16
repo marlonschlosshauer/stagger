@@ -5,44 +5,76 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.LinkedList;
 
-public class DocumentHandler extends DefaultListModel<Snapshot> {
+public class DocumentHandler {
 
     // TODO:Re-write this entire shit but with DefaultListModel<Image> because I can't single out pages
+    LinkedList<PDDocument> docs;
+    DefaultListModel<Snapshot> model;
+
+    public DocumentHandler() {
+        model = new DefaultListModel<>();
+        docs = new LinkedList<>();
+    }
 
     // close all documents
     public void clean() {
+
         try {
+            for (int o = 0; o < docs.size(); o++) {
 
-            for (int i = 0; i < this.getSize(); i++) {
-                get(i).getDoc().close();
-                this.removeElementAt(i);
+                // Fetch doc
+                PDDocument doc = docs.get(o);
+                doc.close();
+
+                // Remove pages from model
+                for (int i = 0; i < model.getSize(); i++) {
+                    if (model.getElementAt(i).getIndex() == o) {
+                        model.remove(i);
+                    }
+                }
+
+                // Finally close document
+                docs.remove(doc);
             }
-
         } catch (IOException io) {
-            System.err.println("Could not close document : " + io.getMessage());
+            System.err.println("Couldn't close PDDocument :" + io.getMessage());
         }
     }
 
     public PDDocument merge() throws IOException {
 
-        PDDocument temp = new PDDocument();
-        PDFMergerUtility merger = new PDFMergerUtility();
+        PDDocument mergedDoc = new PDDocument();
 
-        for (int i = 0; i < this.size(); i++) {
-            merger.appendDocument(temp,this.getElementAt(i).getDoc());
+
+        for (int i = 0; i < model.getSize(); i++) {
+            Snapshot tempSnap = model.getElementAt(i);
+
+            mergedDoc.importPage(tempSnap.getDoc().getPage(tempSnap.getIndex()));
+
+            if (tempSnap.isSelected()) {
+            }
         }
 
-        return temp;
+        return mergedDoc;
     }
 
     public void load(String path) throws IOException {
 
-        try {
-            this.addElement(new Snapshot(PDDocument.load(new File(path))));
+        // Load PDDocument into memory
+        PDDocument temp = PDDocument.load(new File(path));
+        docs.add(temp);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Make Image of every PDPage
+        for (int i = 0; i < temp.getNumberOfPages(); i++) {
+
+            // Add new Snapshot
+            model.addElement(new Snapshot(temp, i));
         }
+    }
+
+    public DefaultListModel<Snapshot> getModel() {
+        return model;
     }
 }

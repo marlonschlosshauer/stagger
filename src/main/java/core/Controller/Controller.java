@@ -4,8 +4,11 @@ import core.View.MainWindow;
 import core.Model.DocumentHandler;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -26,16 +29,24 @@ public class Controller {
 
     public void init() {
 
-        main = new MainWindow(handler);
+        main = new MainWindow(handler.getModel());
 
         // Add action listener
-        // TODO: Add Dialog Window to determine path
         main.setActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    handler.load(System.getProperty("user.home") + "/temp/" + "kap.pdf");
+                    File[] selected = invokeLoadFileChooser();
+
+                    if(selected == null) {
+                        return;
+                    }
+
+                    for(File file : selected) {
+                        handler.load(file.getAbsolutePath());
+                    }
+
                 } catch (IOException ex) {
                     ex.getMessage();
                 }
@@ -47,9 +58,7 @@ public class Controller {
 
                 try {
                     PDDocument temp = handler.merge();
-                    System.out.println("Pages now loaded : " + temp.getNumberOfPages());
                     temp.save(System.getProperty("user.home") + "/Downloads/" + "testing.pdf");
-                    //temp.close();
 
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());
@@ -57,10 +66,39 @@ public class Controller {
             }
         });
 
-        this.getMain().setVisible(true);
+        main.setVisible(true);
     }
 
-    public MainWindow getMain() {
-        return main;
+    public File[] invokeLoadFileChooser() {
+        JFileChooser files = new JFileChooser();
+        files.setMultiSelectionEnabled(true);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                ".PDF", "pdf", "PDF");
+        files.setFileFilter(filter);
+        files.showOpenDialog(null);
+
+        return files.getSelectedFiles();
+    }
+
+
+    public String invokeSaveFileChooser() {
+        JFileChooser files = new JFileChooser();
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                ".PDF", "pdf", "PDF");
+        files.setFileFilter(filter);
+
+        int selectedFile = files.showOpenDialog(null);
+
+        if(selectedFile == JFileChooser.CANCEL_OPTION) {
+            return "";
+        }
+
+        if(selectedFile == JFileChooser.APPROVE_OPTION) {
+            System.out.println("Selected file : " + files.getSelectedFile().getName());
+        }
+
+        return files.getSelectedFile().getAbsolutePath();
     }
 }
