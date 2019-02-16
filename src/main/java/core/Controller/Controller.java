@@ -58,7 +58,13 @@ public class Controller {
 
                 try {
                     PDDocument temp = handler.merge();
-                    temp.save(System.getProperty("user.home") + "/Downloads/" + "testing.pdf");
+                    String path = invokeSaveFileChooser();
+
+                    if(path == null) {
+                        return;
+                    }
+
+                    temp.save(path);
 
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());
@@ -89,16 +95,23 @@ public class Controller {
                 ".PDF", "pdf", "PDF");
         files.setFileFilter(filter);
 
-        int selectedFile = files.showOpenDialog(null);
+        int selectedFile = files.showSaveDialog(null);
 
         if(selectedFile == JFileChooser.CANCEL_OPTION) {
-            return "";
+            return null;
         }
 
         if(selectedFile == JFileChooser.APPROVE_OPTION) {
-            System.out.println("Selected file : " + files.getSelectedFile().getName());
+            System.out.println(files.getSelectedFile().getAbsolutePath());
+            if(files.getSelectedFile().getAbsolutePath().matches(".*\\.([pP][dD][fF])")) {
+                System.out.println("It matched regex");
+                return files.getSelectedFile().getAbsolutePath();
+            }
+            else {
+                return files.getSelectedFile().getAbsolutePath() + ".pdf";
+            }
         }
 
-        return files.getSelectedFile().getAbsolutePath();
+        return null;
     }
 }
