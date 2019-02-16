@@ -18,20 +18,20 @@ public class MainWindow extends JFrame {
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(),BoxLayout.Y_AXIS));
-        this.setBackground(Color.YELLOW);
+        //this.setBackground(Color.YELLOW);
 
         // Thumbnail
         thumbnailList = new JList(model);
         thumbnailList.setCellRenderer(new PageList());
         thumbnailList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         thumbnailList.setVisibleRowCount(PageList.width/this.getWidth());
-        thumbnailList.setBackground(Color.BLUE);
+        //thumbnailList.setBackground(Color.BLUE);
 
         thumbnailList.setFixedCellWidth(PageList.width);
 
         // Panel for Thumbnail
         pages = new JScrollPane(this.thumbnailList);
-        pages.setBackground(Color.red);
+        //pages.setBackground(Color.red);
 
         this.add(pages);
 
@@ -46,7 +46,7 @@ public class MainWindow extends JFrame {
         buttonPanel = new JPanel();
         buttonPanel.setMaximumSize(new Dimension(this.getWidth(),this.getHeight()/10));
         buttonPanel.setSize(600, 100);
-        buttonPanel.setBackground(Color.YELLOW);
+        //buttonPanel.setBackground(Color.YELLOW);
 
         buttonPanel.add(loadButton);
         buttonPanel.add(saveButton);
