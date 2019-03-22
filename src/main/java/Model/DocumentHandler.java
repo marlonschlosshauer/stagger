@@ -50,9 +50,8 @@ public class DocumentHandler {
         for (int i = 0; i < model.getSize(); i++) {
             Snapshot tempSnap = model.getElementAt(i);
 
-            mergedDoc.importPage(tempSnap.getDoc().getPage(tempSnap.getIndex()));
-
             if (tempSnap.isSelected()) {
+                mergedDoc.importPage(tempSnap.getDoc().getPage(tempSnap.getIndex()));
             }
         }
 

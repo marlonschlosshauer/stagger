@@ -4,6 +4,7 @@ import Model.Snapshot;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class PageList extends JLabel implements ListCellRenderer {
 
@@ -12,7 +13,6 @@ public class PageList extends JLabel implements ListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-
         Snapshot entry = (Snapshot) value;
 
         // Update selection
@@ -21,6 +21,12 @@ public class PageList extends JLabel implements ListCellRenderer {
         // Scale image
         this.setIcon(new ImageIcon(entry.getThumbnail().getScaledInstance(PageList.width, PageList.height, Image.SCALE_SMOOTH)));
 
+        // Add border if selected
+        if (isSelected) {
+            this.setBorder(BorderFactory.createLineBorder(Color.black));
+        } else {
+            this.setBorder(BorderFactory.createEmptyBorder());
+        }
         return this;
     }
 }
