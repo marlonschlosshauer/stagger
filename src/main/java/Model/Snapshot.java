@@ -11,7 +11,7 @@ public class Snapshot {
     private PDDocument parentDoc; // TODO: Could only be index
     private Image thumbnail;
     private int index;
-    private boolean selected = true;
+    private boolean isDisabled = false;
 
     public Snapshot(PDDocument parentDoc, int index) throws IOException {
 
@@ -35,11 +35,11 @@ public class Snapshot {
         return index;
     }
 
-    public boolean isSelected() {
-        return this.selected;
+    public boolean isDisabled() {
+        return this.isDisabled;
     }
 
-    public void setSelected(boolean isSelected) {
-        this.selected = isSelected;
+    public void setDisabled(boolean isSelected) {
+        this.isDisabled = isSelected;
     }
 }
