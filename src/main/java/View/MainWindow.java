@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -23,7 +24,6 @@ public class MainWindow extends JFrame {
         thumbnailList = new JList(model);
         thumbnailList.setCellRenderer(new PageList());
         thumbnailList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        thumbnailList.setVisibleRowCount(PageList.width / this.getWidth());
 
         // Enable selecting multiple items without ctrl/cmd
         thumbnailList.setSelectionModel(new DefaultListSelectionModel() {
@@ -36,9 +36,6 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-
-
-        thumbnailList.setFixedCellWidth(PageList.width);
 
         // Panel for Thumbnail
         pages = new JScrollPane(this.thumbnailList);
@@ -65,9 +62,8 @@ public class MainWindow extends JFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-
-                // Recalculate rows
-                thumbnailList.setVisibleRowCount(PageList.width / getWidth());
+                PageList.cellWidth = (int) Math.floor((pages.getWidth() - pages.getVerticalScrollBar().getWidth()) / 6);
+                thumbnailList.setFixedCellWidth(PageList.cellWidth);
             }
         });
 

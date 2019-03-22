@@ -7,8 +7,7 @@ import java.awt.*;
 
 public class PageList extends JLabel implements ListCellRenderer {
 
-    static int width = 200;
-    static int height = PageList.width;
+    static int cellWidth = 200;
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean disabled, boolean cellHasFocus) {
@@ -17,8 +16,12 @@ public class PageList extends JLabel implements ListCellRenderer {
         // Update selection
         entry.setDisabled(disabled);
 
+        // Update height while keeping ratio
+        double height = (double) entry.getThumbnail().getWidth(null) / (double) entry.getThumbnail().getHeight(null);
+        height = PageList.cellWidth / height;
+
         // Scale image
-        this.setIcon(new ImageIcon(entry.getThumbnail().getScaledInstance(PageList.width, PageList.height, Image.SCALE_SMOOTH)));
+        this.setIcon(new ImageIcon(entry.getThumbnail().getScaledInstance(PageList.cellWidth, (int) height, Image.SCALE_SMOOTH)));
 
         // Add border if selected
         if (!disabled) {
