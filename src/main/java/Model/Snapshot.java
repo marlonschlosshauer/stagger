@@ -1,4 +1,4 @@
-package core.Model;
+package Model;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;

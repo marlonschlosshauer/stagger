@@ -1,6 +1,6 @@
-package core.View;
+package View;
 
-import core.Model.Snapshot;
+import Model.Snapshot;
 
 import javax.swing.*;
 import java.awt.*;

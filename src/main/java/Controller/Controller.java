@@ -1,7 +1,7 @@
-package core.Controller;
+package Controller;
 
-import core.View.MainWindow;
-import core.Model.DocumentHandler;
+import Model.DocumentHandler;
+import View.MainWindow;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.swing.*;
@@ -39,11 +39,11 @@ public class Controller {
                 try {
                     File[] selected = invokeLoadFileChooser();
 
-                    if(selected == null) {
+                    if (selected == null) {
                         return;
                     }
 
-                    for(File file : selected) {
+                    for (File file : selected) {
                         handler.load(file.getAbsolutePath());
                     }
 
@@ -60,7 +60,7 @@ public class Controller {
                     PDDocument temp = handler.merge();
                     String path = invokeSaveFileChooser();
 
-                    if(path == null) {
+                    if (path == null) {
                         return;
                     }
 
@@ -97,17 +97,16 @@ public class Controller {
 
         int selectedFile = files.showSaveDialog(null);
 
-        if(selectedFile == JFileChooser.CANCEL_OPTION) {
+        if (selectedFile == JFileChooser.CANCEL_OPTION) {
             return null;
         }
 
-        if(selectedFile == JFileChooser.APPROVE_OPTION) {
+        if (selectedFile == JFileChooser.APPROVE_OPTION) {
             System.out.println(files.getSelectedFile().getAbsolutePath());
-            if(files.getSelectedFile().getAbsolutePath().matches(".*\\.([pP][dD][fF])")) {
+            if (files.getSelectedFile().getAbsolutePath().matches(".*\\.([pP][dD][fF])")) {
                 System.out.println("It matched regex");
                 return files.getSelectedFile().getAbsolutePath();
-            }
-            else {
+            } else {
                 return files.getSelectedFile().getAbsolutePath() + ".pdf";
             }
         }

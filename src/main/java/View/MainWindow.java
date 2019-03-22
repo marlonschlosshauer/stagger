@@ -1,4 +1,4 @@
-package core.View;
+package View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,14 +17,14 @@ public class MainWindow extends JFrame {
     public MainWindow(ListModel model) {
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BoxLayout(this.getContentPane(),BoxLayout.Y_AXIS));
+        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
         //this.setBackground(Color.YELLOW);
 
         // Thumbnail
         thumbnailList = new JList(model);
         thumbnailList.setCellRenderer(new PageList());
         thumbnailList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        thumbnailList.setVisibleRowCount(PageList.width/this.getWidth());
+        thumbnailList.setVisibleRowCount(PageList.width / this.getWidth());
         //thumbnailList.setBackground(Color.BLUE);
 
         thumbnailList.setFixedCellWidth(PageList.width);
@@ -44,7 +44,7 @@ public class MainWindow extends JFrame {
 
         // Panel for Buttons
         buttonPanel = new JPanel();
-        buttonPanel.setMaximumSize(new Dimension(this.getWidth(),this.getHeight()/10));
+        buttonPanel.setMaximumSize(new Dimension(this.getWidth(), this.getHeight() / 10));
         buttonPanel.setSize(600, 100);
         //buttonPanel.setBackground(Color.YELLOW);
 
@@ -58,7 +58,7 @@ public class MainWindow extends JFrame {
                 super.componentResized(e);
 
                 // Recalculate rows
-                thumbnailList.setVisibleRowCount(PageList.width/getWidth());
+                thumbnailList.setVisibleRowCount(PageList.width / getWidth());
             }
         });
 
